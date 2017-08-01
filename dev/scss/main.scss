@@ -1,0 +1,7 @@
+@import "core/includes";
+@import "../../tmp/sprites/coctail";
+
+.social_link {
+    display: block;
+    @include sprite($coc-1);
+}

@@ -1,0 +1,10 @@
+@import "variables";
+@import "function";
+
+// использовать сетку на флексах
+@import "grid/flex/load-flex-grid";
+
+// использовать сетку на инлайн блоках
+@import "grid/inline-block/load-inline-block-grid";
+
+@import "mixin";

@@ -1,0 +1,90 @@
+// считает размер шрифта относитель размера области просмотра с заданной пропорцией
+@function bridge($y1, $y2, $w-max, $w-min) {
+    $m: ($y2 - $y1)/($w-max - $w-min);
+    $b: $y1 - $m * $w-min;
+    $m: $m*100vw; 
+    $y: "calc(#{$m} + #{$b})";
+    @return unquote($y);
+} 
+
+
+
+
+
+
+
+
+//=== Функции для нового движка сетки ===//
+
+// перезаписывает глобальную переменну $wrapper. Вызывается в миксине wrapper();
+@function setWidth($new-width) {
+    $wrapper-width: $new-width !global;
+    @return $wrapper-width; 
+}
+
+// Конвертирует межколоночник в проценты
+@function ofsetConvert($value) {
+    @return $value / $wrapper-width * 100%;
+}
+
+// Рассчитывает ширину колонки
+@function getColSize($n) {
+    $size: 100% / $column * $n;
+    @if(unit($ofset) != "%") {
+        $size: calc(#{$size} - #{$ofset});
+    } @else {
+        $size: $size - $ofset;
+    }
+    @return $size;
+}
+
+// Проверяет текущие настройки  сетки
+@function chekOptions() {
+    $options-correct: true;
+    @if($grid != 'flex' and $grid != 'inline-block') {
+        $options-correct: false;
+        @error "Доступные типы сетки: 'flex', 'inline-block'. Текущее значение - '#{$grid}' не допустимо!";
+    }
+    @if(unit($ofset) != "px" and unit($ofset) != "%") {
+        $options-correct: false;
+        @error "Следует указывать  $ofset в 'px' или '%'. Текущее значение - '#{unit($ofset)}' не допустимо!";
+    }
+    @if(unit($base-font-size) != "px") {
+        $options-correct: false;
+        @error "Следует указывать  $base-font-size только 'px'";
+    }
+    @if(type-of($media-unit) != string) {
+        $options-correct: false;
+        @error "$media-unit должна быть строкой, текущее значение:  #{$media-unit} - #{type-of($media-unit)}";
+    }
+    @if(type-of($combine-selectors) != bool) {
+         @error "$combine-selectors должна true или false, текущее значение:  #{$combine-selectors} - #{type-of($combine-selectors)}";
+    }
+    @return $options-correct;
+}
+
+// Проверяет входные параметры дя миксина adaptive
+@function chekUnit($media) {
+    $strings: 'px' 'cm' 'mm' '%' 'ch' 'pica' 'in' 'em' 'rem' 'pt' 'pc' 'ex' 'vw' 'vh' 'vmin' 'vmax';
+    $units:   1px  1cm  1mm  1%  1ch  1pica  1in  1em  1rem  1pt  1pc  1ex  1vw  1vh  1vmin  1vmax;
+    $tmp: ();
+    @each $key in $media {
+        @if(unitless($key)) {
+            //$key: $key *  $media-unit;
+            $index: index($strings, $media-unit);
+            @if not $index {
+                @error "Unknown unit `#{$media-unit}`.";
+            }
+            $key: $key * nth($units, $index);
+        }
+        $tmp: append($tmp, $key);  
+    }
+    @return $tmp; 
+}
+
+$options-correct: chekOptions() !global;
+
+
+@if($ofset-percent) {
+    $ofset: ofsetConvert($ofset) !global;
+}

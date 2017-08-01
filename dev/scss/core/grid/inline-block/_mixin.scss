@@ -1,0 +1,23 @@
+@mixin row-inline() {
+    word-spacing: - ($base-font-size / 4);
+}
+@mixin col-inline() {
+    display: inline-block;
+    word-spacing: normal;
+}
+@mixin justify() {
+    &::after {
+        content: "";
+        width: 100%;
+        display: inline-block;
+    }
+}
+@mixin h-align-inline($value) {
+    text-align: $value;
+    @if($value == justify) {
+        @include justify();
+    }
+}
+@mixin v-align-inline($value) {
+    vertical-align: $value;
+}

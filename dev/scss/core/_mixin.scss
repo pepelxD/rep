@@ -1,0 +1,171 @@
+@charset "utf-8";
+
+                //============ Миксины сетки ================//
+
+// Миксин определяет основную обертку сайта
+// Параметр $alignment отвечает зацентрирование. 
+// Возможные варианты center - выровняет по центру, right - выровняет по правому краю, по умолчанию выравнивает по левому краю.
+// Параметр $width - не обязательный параметр. Задает максимальную ширину блока.
+// ВНИМАНИЕ!!! При использовании параметра $width глобальная переменная $wrapper будет выставлена в это значение.
+@mixin wrapper ($alignment: center, $width: $wrapper-width) {
+    max-width: setWidth($width);
+    @if($alignment == 'center') {
+        margin-left: auto;
+        margin-right: auto;
+    }@else if ($alignment == 'right') {
+        margin-left: auto;
+    }
+    padding-left: $fields;
+    padding-right: $fields;
+}
+
+// Миксин создания строки. В зависимости от типа сетки в настройках 
+@mixin row() {
+    @if($grid == 'flex') {
+        @include row-flex();
+    }@else if($grid == 'inline-block') {
+        @include row-inline();
+    }
+    margin-left: $ofset / -2;
+    margin-right: $ofset / -2;
+}
+// миксин создания колонок
+// Принимает один параметр булевского типа: true - делать столбцы с отступами, false - без отступов
+// По умолчанию true
+@mixin col($indent: true) {
+    @if($grid == 'inline-block') {
+        @include col-inline();
+    }
+    @if($indent) {
+        margin-left: $ofset / 2;
+        margin-right: $ofset / 2;
+        box-sizing: border-box;
+    }@else {
+        padding-left: $ofset / 2;
+        padding-right: $ofset / 2;
+    }
+    word-wrap: break-word;
+    
+}
+//размер колонок
+// Принимает два параметра: первый(обязательный) - количество занимаемых колонок в сетке, второй - размер экрана для медиа запроса
+// $media - может быть числом или списком из двух чисел, в последнем случае означает минимальное и максимальное значения для медиа запроса
+@mixin col-size($n, $media: false) {
+    @if($media != false) {
+        @include adaptive($media) {
+            width: getColSize($n);
+        }
+    }@else {
+        width: getColSize($n);
+    }
+}
+// Миксин горизонтального выравнивания столбцов в строке. Применяется к строке.
+// Для flex сетки доступны все значения свойства justify-content.
+// Для сетки inline-block доступны все значения свойства text-align.
+@mixin h-align($value) {
+    @if($grid == 'inline-block') {
+        @include h-align-inline($value);
+    }@else if($grid == 'flex') {
+        @include h-align-flex($value);
+    }
+}
+
+// Миксин вертикального выравнивания столбцов в строке. Применяется к строке в случае flex сетки и к столбцам в случае inline-block.
+// Для flex сетки доступны все значения свойства align-items.
+// Для сетки inline-block доступны все значения свойства vertical-align.
+@mixin v-align($value) {
+    @if($grid == 'inline-block') {
+        @include v-align-inline($value);
+    }@else if($grid == 'flex') {
+        @include v-align-flex($value);
+    }
+}
+
+                //============== Миксины адаптива ================//
+// Миксин устанавливает медиа запрос 
+// Принимает один обязательный параметр.
+// В случае передачи  одного строкового значения, будет сгенерирован меди запрос с установленным типом устройства в это значение.
+// В случае передачи  одного числового значения, будет сгенерирован меди запрос с установленным max-width в это значение.
+// В случае передачи 2х числовых значений через пробел, будет сгенерирован медиа запрос 
+// на основе "(min-width: $value_2) and (max-width: $value_1)"
+// !!!!!Единицы измерения в контрольных значениях можно не указывать, в этом случае используются единицы указанные в $media-unit.
+@mixin adaptive($media) {
+    @if(length($media) == 1 and type-of(nth($media, 1)) == string) {
+        $type: nth($media, 1);
+        @media #{$type} {
+            @content;
+        }
+    }
+    @if(type-of(nth($media, 1)) == number) {
+        $media: chekUnit($media); // функция дописывает $media-unit, если не указаны единицы измерения.
+        @if(length($media) == 2) {
+            @media only screen and (min-width: nth($media, 2) + 1) and (max-width: nth($media, 1) - 1) {
+                @content;
+            }
+        }@else {
+            @media only screen and (max-width: nth($media, 1)) {
+                @content;
+            }
+        }
+    }
+}
+
+
+
+                 //================== Миксины общего назначения ==================//
+
+// миксин сброса стилей
+@mixin reset() {
+    * {
+        margin: 0;
+        padding: 0;
+    }
+    html, body {
+        font-size: $base-font-size;
+    }
+}
+
+// Скрывает визуальное содержимое элемента, оставляя его доступным для чтения читалкам и роботам.
+@mixin visual-hidden() {
+    &:not(:focus):not(:active) {
+        position: absolute;
+
+        width: 1px;
+        height: 1px;
+        margin: -1px;
+        border: 0;
+        padding: 0;
+
+        white-space: nowrap;
+
+        clip-path: inset(100%);
+        clip: rect(0 0 0 0);
+        overflow: hidden;
+    }
+}
+
+//дебагер
+@mixin debug($background, $outline) {
+    height: 100vh;
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    z-index: -1;
+    > div {
+        @include wrapper(center);
+        height: inherit;
+        > div {
+            @include row();
+            height: inherit;
+            > div {
+                height: inherit;
+                @include col();
+                @include col-size(1);
+                background-color: $background;
+                outline: $outline;
+            }
+        }
+    }
+}

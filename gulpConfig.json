@@ -1,0 +1,13 @@
+{
+    "path": {
+        "build": {
+            "dir": "app",
+            "imgDir": "app/img" 
+        },
+        "src": {
+            "dir": "dev",
+            "imgDir": "dev/img"
+        }
+    },
+    "spritesFolder": "sprites"
+}

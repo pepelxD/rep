@@ -1,0 +1,21 @@
+@mixin row-mixin() {
+    display: flex;
+    flex-wrap: wrap;
+}
+%row-extend {
+    display: flex;
+    flex-wrap: wrap;
+}
+@mixin row-flex() {
+    @if($combine-selectors) {
+        @extend %row-extend;
+    }@else {
+        @include row-mixin();
+    }
+}
+@mixin h-align-flex($value) {
+    justify-content: $value;
+}
+@mixin v-align-flex($value) {
+    align-items: $value;
+}
