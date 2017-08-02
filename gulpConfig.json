@@ -6,8 +6,18 @@
         },
         "src": {
             "dir": "dev",
-            "imgDir": "dev/img"
+            "imgDir": "dev/img",
+            "scssDir": "dev/scss/**/*.scss"
+        },
+        "tasks": {
+            "imgsprite": "./tasks/imgsprite"
         }
     },
-    "spritesFolder": "sprites"
+    "spritesFolder": "sprites",
+    "sassOptions": {
+        "outputStyle": "expanded",
+        "indentType": "tab",
+        "indentWidth": 1,
+        "includePaths": ["tmp/**/*.scss"]
+    }
 }
