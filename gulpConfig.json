@@ -7,11 +7,16 @@
         "src": {
             "dir": "dev",
             "imgDir": "dev/img",
-            "scssDir": "dev/scss/**/*.scss"
+            "scssDir": "dev/scss/**/*.scss",
+            "htmlDir": "dev/**/*.html"
         },
         "tasks": {
             "imgsprite": "./tasks/imgsprite",
-            "sass": ".tasks/sass"
+            "sass": ".tasks/sass",
+            "html": "./tasks/html",
+            "img": "./tasks/img",
+            "font": "./tasks/font",
+            "clean": "./tasks/clean"
         }
     },
     "spritesFolder": "sprites",

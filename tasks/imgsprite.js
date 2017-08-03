@@ -8,8 +8,6 @@ const glob = require("glob").Glob;
 
 const isDevelop = !process.env.NODE_ENV || process.env.NODE_ENV == 'develop';
 
-console.dir($)
-
 module.exports = function (options) {
 
     return function () {
@@ -27,7 +25,7 @@ module.exports = function (options) {
                     arr[i].destPath = item.slice(0, pos).replace(options.path.src.dir, options.path.build.dir);
                 }
             }
-            var j = 0;
+            let j = 0;
             matches.forEach((item, i, arr) => {
                 var pos = item.lastIndexOf('/');
                 if (files.length === 0) {
@@ -44,7 +42,7 @@ module.exports = function (options) {
                     .pipe($.spritesmith({
                         imgName: arr[i].fileName + '.png',
                         cssName: arr[i].fileName + '.scss',
-                        imgPath: '../img/' + arr[i].fileName + '.png'
+                        imgPath: `../img/${ arr[i].fileName}.png`
                     }));
                 var stylStream = spriteData.css
                     .pipe(gulp.dest('tmp/sprites/'));

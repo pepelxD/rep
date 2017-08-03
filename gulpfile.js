@@ -31,35 +31,15 @@ requireTask('imgsprite', config.path.tasks.imgsprite, config);
 
 requireTask('sass', config.path.tasks.sass, config);
 
-gulp.task('html', function () {
-    return gulp.src('dev/**/*.html')
-        .pipe(debug({title: 'src'}))
-        .pipe(newer('app')) // сравнивает по дате модификации
-        .pipe(gulp.dest('app'))
-        .pipe(debug({title: 'dest'}));
-});
+requireTask('html', config.path.tasks.html, config);
 
-gulp.task('img', function () {
-    return gulp.src(['dev/**/*.{jpg,jpeg,png,gif,svg}', '!dev/**/sprite/*.{jpg,jpeg,png,gif,svg}'])
-        .pipe(newer('app'))
-        .pipe(imagemin([
-            imagemin.gifsicle({interlaced: true}),
-            imagemin.jpegtran({progressive: true}),
-            imagemin.optipng(),
-            imagemin.svgo({plugins: [{removeViewBox: true}]})
-        ]))
-        .pipe(gulp.dest('dev'))
-        .pipe(gulp.dest('app'));
-});
-  
-// test string
+requireTask('img', config.path.tasks.img, config);
+
+requireTask('font', config.path.tasks.font, config);
+
+requireTask('clean', config.path.tasks.clean, config);
 
 
-gulp.task('font', function () {
-    return gulp.src('dev/**/*.{ttf,otf,woff2, woff}')
-        .pipe(newer('app'))
-        .pipe(gulp.dest('app'));
-});
 
 gulp.task('js', function () {
     return gulp.src('dev/**/*.js')
@@ -67,10 +47,6 @@ gulp.task('js', function () {
         .pipe(newer('app'))
         .pipe(gulp.dest('app'))
         .pipe(debug({title: 'dest'}));
-});
-
-gulp.task('clean', function () {
-    return del('app');
 });
 
 gulp.task('default', ['html', 'imgsprite', 'sass', 'img', 'font', 'js', 'watch']);
