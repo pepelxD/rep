@@ -10,7 +10,8 @@
             "scssDir": "dev/scss/**/*.scss"
         },
         "tasks": {
-            "imgsprite": "./tasks/imgsprite"
+            "imgsprite": "./tasks/imgsprite",
+            "sass": ".tasks/sass"
         }
     },
     "spritesFolder": "sprites",
