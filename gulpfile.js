@@ -27,9 +27,9 @@ var isDevelop = !process.env.NODE_ENV || process.env.NODE_ENV == 'develop';
 // linux системы:
 //NODE_ENV=prod {команда} - для сборки продакшена, иначе собирается develop версия
 
-requireTask('imgsprite', './tasks/imgsprite', config);
+requireTask('imgsprite', config.path.tasks.imgsprite, config);
 
-requireTask('sass', './tasks/sass', config);
+requireTask('sass', config.path.tasks.sass, config);
 
 gulp.task('html', function () {
     return gulp.src('dev/**/*.html')
@@ -52,7 +52,7 @@ gulp.task('img', function () {
         .pipe(gulp.dest('app'));
 });
   
- 
+// test string
 
 
 gulp.task('font', function () {
